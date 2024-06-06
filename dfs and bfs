@@ -1,0 +1,103 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+#define MAX_VERTICES 8
+struct Queue { 
+    int items[MAX_VERTICES];
+    int front;
+    int rear; 
+}; 
+struct Queue* createQueue() 
+{ 
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->front = -1;
+    queue->rear = -1;
+    return queue;
+} 
+void enqueue(struct Queue* queue, int value) 
+{ 
+    if (queue->rear == MAX_VERTICES - 1)
+    {
+        printf("Queue is full\n");
+    }
+    else 
+    { 
+        if (queue->front == -1)
+        {
+            queue->front = 0;
+        }
+        queue->rear++;
+        queue->items[queue->rear] = value; 
+    } 
+}
+int dequeue(struct Queue* queue) 
+{ 
+    int item = -1; 
+    if (queue->front == -1) 
+    { 
+        printf("Queue is empty\n");
+    }  
+    else 
+    { 
+        item = queue->items[queue->front]; 
+        queue->front++; 
+        if (queue->front > queue->rear)
+        {
+            queue->front = queue->rear = -1;
+        }
+    } 
+    return item;
+} 
+void dfs(int graph[MAX_VERTICES][MAX_VERTICES], int vertex, int visited[]) 
+{ 
+    printf("%d ", vertex);
+    visited[vertex] = 1;
+    for (int i = 0; i < MAX_VERTICES; i++) 
+    { 
+        if (graph[vertex][i] && !visited[i])
+        {
+            dfs(graph, i, visited);
+        }
+    } 
+} 
+void bfs(int graph[MAX_VERTICES][MAX_VERTICES], int start) 
+{ 
+    struct Queue* queue = createQueue();
+    int visited[MAX_VERTICES] = {0};
+    printf("%d ", start); 
+    visited[start] = 1; 
+    enqueue(queue, start); 
+    while (queue->front != -1) 
+    {
+        int currentVertex = dequeue(queue);
+        for (int i = 0; i < MAX_VERTICES; i++) 
+        { 
+            if (graph[currentVertex][i] && !visited[i]) 
+            {
+                printf("%d ", i);
+                visited[i] = 1; 
+                enqueue(queue, i);
+            } 
+        } 
+    } 
+} 
+int main() 
+{ 
+    int graph[MAX_VERTICES][MAX_VERTICES] = 
+    { 
+        {0, 1, 0, 1, 0, 0, 0, 0}, 
+        {0, 0, 1, 0, 1, 0, 1, 0}, 
+        {1, 0, 0, 0, 0, 0, 0, 0}, 
+        {0, 0, 1, 0, 0, 0, 0, 0}, 
+        {0, 0, 0, 0, 0, 0, 0, 1}, 
+        {0, 0, 0, 0, 0, 0, 0, 0}, 
+        {0, 0, 0, 0, 0, 1, 0, 0}, 
+        {0, 0, 0, 0, 0, 1, 1, 0} 
+    }; 
+    int startVertex = 0; 
+    printf("DFS starting from vertex %d: ", startVertex); 
+    int visited_dfs[MAX_VERTICES] = {0}; 
+    dfs(graph, startVertex, visited_dfs); 
+    printf("\nBFS starting from vertex %d: ", startVertex); 
+    bfs(graph, startVertex); 
+    return 0; 
+} 
