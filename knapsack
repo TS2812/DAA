@@ -1,0 +1,45 @@
+#include<stdio.h> 
+int n = 7;
+int w[] = {2, 3, 5, 7, 1, 4, 1}; // Weight
+int p[] = {10, 5, 15, 7, 6, 18, 3}; // Profit
+int N = 15; // max weight
+int main() 
+{ 
+    int i, j, temp; 
+    for (i = 0; i < n; i++) 
+    { 
+        for (j = i + 1; j < n; j++) 
+        {
+            if ((float)p[i] / w[i] < (float)p[j] / w[j]) 
+            { 
+                temp = p[j]; 
+                p[j] = p[i]; 
+                p[i] = temp; 
+ 
+                temp = w[j]; 
+                w[j] = w[i]; 
+                w[i] = temp; 
+            } 
+        } 
+    } 
+    float profit = 0;
+    for (i = 0; i < n; i++) 
+    { 
+        if (N > 0 && N >= w[i]) 
+        { 
+            profit += p[i];
+            N -= w[i];
+        } 
+        else if (N > 0) 
+        { 
+            profit += (float)N * ((float)p[i] / w[i]); 
+            break;
+        }
+        else 
+        { 
+            break; 
+        } 
+    } 
+    printf("Profit = %.6f\n", profit);
+    return 0; 
+}
