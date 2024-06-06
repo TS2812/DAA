@@ -1,0 +1,55 @@
+#include <limits.h> 
+#include <stdio.h> 
+int MatrixChainMultiplication(int arr[], int n) { 
+    int m[n][n];
+    int s[n][n];
+    for (int i = 1; i <= n; i++) 
+    { 
+        m[i][i] = 0; 
+    } 
+    for (int L = 2; L <= n; L++) 
+    { 
+        for (int i = 1; i <= n - L + 1; i++) 
+        { 
+            int j = i + L - 1; 
+            m[i][j] = INT_MAX;
+            for (int k = i; k <= j - 1; k++) 
+            {
+                int q = m[i][k] + m[k + 1][j] + arr[i - 1] * arr[k] * arr[j]; 
+                if (q < m[i][j]) 
+                { 
+                    m[i][j] = q; 
+                    s[i][j] = k;
+                } 
+            } 
+        } 
+    } 
+    printf("\nNumber of scalar multiplications (m matrix):\n"); 
+    for (int i = 1; i <= n; i++) 
+    { 
+        for (int j = 1; j <= n; j++) 
+        { 
+            printf("%d\t\t\t", m[i][j]); 
+        } 
+        printf("\n"); 
+    }
+    printf("\nPosition of partitioning (k matrix):\n"); 
+    for (int i = 1; i <= n; i++) 
+    { 
+        for (int j = 1; j <= n; j++) 
+        { 
+            printf("%d ", s[i][j]); 
+        } 
+        printf("\n"); 
+    } 
+    return m[1][n];
+} 
+int main() 
+{ 
+    int arr[] = {4, 10, 3, 12, 20, 7}; 
+    int size = sizeof(arr) / sizeof(arr[0]); 
+    printf("\nMinimum number of multiplications required for matrix multiplication is %d ", MatrixChainMultiplication(arr, 
+size - 1)); 
+    getchar();
+    return 0; 
+} 
